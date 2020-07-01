@@ -7,7 +7,7 @@ frame1 = LabelFrame(root, text="Frame", padx=10, pady=10)
 frame1.grid(row=1, column=0)
 
 
-# to add: per buff damage 
+# to add: per buff damage 4k first skill 5.5k 3rd skill
 def scaletype():
     def totalstat():
         b_atk = int(b_atk_entry.get())
@@ -32,8 +32,11 @@ def scaletype():
         self_bhp_stat = int(self_bhp_stat_entry.get())
         self_hp_multiplier_stat = getdouble(self_hp_multiplier_stat_entry.get())
         hp_leadskill_stat = int(hp_leadskill_stat_entry.get())
+        debuffs_on_enemy_val = getdouble(debuff_amount_entry.get())
+        damage_per_debuff_val = int(dmg_per_debuff_entry.get())
 
-        tot_atk_stat = ((b_atk + r_atk + ((atoweratk_stat / 100) * b_atk) + ((atowerele_stat / 100) * b_atk) + ((leadskill_stat / 100) * b_atk)) * atk_buff_toggle)
+        tot_atk_stat = ((b_atk + r_atk + ((atoweratk_stat / 100) * b_atk) + ((atowerele_stat / 100) * b_atk) + (
+                    (leadskill_stat / 100) * b_atk)) * atk_buff_toggle)
 
         tot_cd_stat = (1 + ((atowercd_stat + cd_stat + skill_ups) / 100))
 
@@ -41,9 +44,8 @@ def scaletype():
 
         en_hp_dmg = (en_hp_stat * (en_hp_multiplier_stat / 100))
 
-        tot_self_hp_stats = (self_bhp_stat + self_rhp_stat + ((atowerhp_stat / 100) * self_bhp_stat) + ((hp_leadskill_stat / 100) * self_bhp_stat))
-
-        tot_self_hp_stat.set(tot_self_hp_stats)
+        tot_self_hp_stats = (self_bhp_stat + self_rhp_stat + ((atowerhp_stat / 100) * self_bhp_stat) + (
+                    (hp_leadskill_stat / 100) * self_bhp_stat))
 
         self_hp_multi = (self_hp_multiplier_stat / 100)
 
@@ -51,8 +53,10 @@ def scaletype():
 
         def_stats = (1000 / (1140 + (3.5 * en_def_stat * def_break_toggle * ignore_def_toggle)))
 
-        tot_dmg.set(((tot_atk_stat * atk_multi) + en_hp_dmg + (tot_self_hp_stats * self_hp_multi)) * tot_cd_stat * def_stats * ex_dmg_boss * brand_toggle)
+        ex_dmg_per_debuff = (tot_atk_stat * atk_multi * (damage_per_debuff_val / 100) * debuffs_on_enemy_val)
 
+        tot_dmg.set(((tot_atk_stat * atk_multi) + ex_dmg_per_debuff + en_hp_dmg + (
+                    tot_self_hp_stats * self_hp_multi)) * tot_cd_stat * def_stats * ex_dmg_boss * brand_toggle)
 
     def hidehpscaling():
         hidehps = int(hidehp_val.get())
@@ -164,6 +168,16 @@ def scaletype():
     defaultentry14.set(0)
     hp_leadskill_stat_entry = Entry(frame1, text=defaultentry14)
 
+    dmgperdebuff = Label(frame1, text="Extra Damage Per Debuff")
+    defaultentry15 = StringVar()
+    defaultentry15.set(0)
+    dmg_per_debuff_entry = Entry(frame1, text=defaultentry15)
+
+    debuffamount = Label(frame1, text="# Of Debuffs on Enemy")
+    debuff_amount_entry = StringVar(frame1)
+    debuff_amount_entry.set('0')
+    debuffs_on_enemy = OptionMenu(frame1, debuff_amount_entry, '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10')
+
     atoweratk = Label(frame1, text="Arena Tower Elemental ATK %")
     atoweratk_stat_entry = StringVar(frame1)
     atoweratk_stat_entry.set('0')
@@ -216,11 +230,7 @@ def scaletype():
     tot_dmg = DoubleVar()
     tot_damage = Label(frame1, textvariable=tot_dmg)
 
-    tot_self_hp_stat = DoubleVar()
-    tothpL = Label(frame1, textvariable=tot_self_hp_stat)
-
     add_stats = Button(frame1, text="Total Stat", command=totalstat)
-
 
     baseatk.grid(row=2, column=0)
     b_atk_entry.grid(row=2, column=1)
@@ -243,12 +253,17 @@ def scaletype():
     leadskill.grid(row=8, column=0)
     leadskill_stat_entry.grid(row=8, column=1)
 
-    extrabossdmg.grid(row=11, column=0)
-    ex_boss_dmg_multiplier.grid(row=11, column=1)
+    extrabossdmg.grid(row=9, column=0)
+    ex_boss_dmg_multiplier.grid(row=9, column=1)
 
-    tothpL.grid(row=12, column=1)
-    tot_damage.grid(row=20, column=1)
-    add_stats.grid(row=21, column=1)
+    dmgperdebuff.grid(row=10, column=0)
+    dmg_per_debuff_entry.grid(row=10, column=1)
+
+    debuffamount.grid(row=11, column=0)
+    debuffs_on_enemy.grid(row=11, column=1)
+
+    tot_damage.grid(row=12, column=1)
+    add_stats.grid(row=13, column=1)
 
     atoweratk.grid(row=2, column=4)
     atoweratklvl.grid(row=2, column=5)
