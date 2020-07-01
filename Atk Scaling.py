@@ -7,7 +7,7 @@ frame1 = LabelFrame(root, text="Frame", padx=10, pady=10)
 frame1.grid(row=1, column=0)
 
 
-# to add: per buff damage 4k first skill 5.5k 3rd skill
+# to add: per buff damage 
 def scaletype():
     def totalstat():
         b_atk = int(b_atk_entry.get())
